@@ -1,0 +1,92 @@
+### Maven ###
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+### Java ###
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+replay_pid*
+
+### Spring Boot ###
+*.log
+spring-boot-*.log
+application-local.yml
+application-local.yaml
+application-local.properties
+application-secrets.yml
+application-secrets.yaml
+.env
+.env.*
+!.env.example
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+### Eclipse ###
+.apt_generated/
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+bin/
+
+### VS Code ###
+.vscode/
+!.vscode/extensions.json
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+### OS ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+### Logs & runtime data ###
+logs/
+*.log.*
+*.pid
+
+### Test / coverage ###
+*.exec
+/coverage/
+/.jacoco/
+
+### Docker (local volumes, not the compose/dockerfiles themselves) ###
+infrastructure/**/data/
+infrastructure/**/volumes/
+
+### Secrets (never commit real credentials) ###
+*.pem
+*.key
+*.p12
+*.jks
+!**/src/**/*.jks

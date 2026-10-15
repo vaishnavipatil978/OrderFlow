@@ -1,0 +1,29 @@
+# Test-only overrides so the suite is hermetic - it must not depend on config-server or
+# discovery-server actually running. spring.datasource.* is deliberately absent here: the
+# Testcontainers Postgres container's JDBC URL isn't known until the container has actually
+# started, so AbstractIntegrationTest registers it dynamically via @DynamicPropertySource
+# instead of a static value in this file.
+spring:
+  cloud:
+    config:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+eureka:
+  client:
+    enabled: false
+
+orderflow:
+  jwt:
+    secret: ZwxARLiyNc9Of8a4WsDzxQxaFYNhGHQf9SAsYSlX1Ik=
+    access-token-expiration-ms: 900000
+    refresh-token-expiration-ms: 604800000
+    issuer: orderflow-identity-service-test
+  admin:
+    email: admin@orderflow.dev
+    password: ChangeMe123!

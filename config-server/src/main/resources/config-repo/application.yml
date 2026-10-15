@@ -1,0 +1,44 @@
+# Shared defaults served to every OrderFlow client, regardless of spring.application.name.
+# Per-service files (e.g. identity-service.yml) are layered on top of this and win on conflicts.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+logging:
+  pattern:
+    level: '%5p [${spring.application.name:-},%X{correlationId:-}]'
+
+# Kafka broker shared by every service that produces or consumes events (order-service,
+# notification-service). Services that don't use Kafka never open a connection to it.
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+
+# Every Eureka-client service (api-gateway + the 6 business services) shares this identically,
+# so it lives here instead of being duplicated per service. discovery-server also receives it
+# but it's inert there - its own discovery-server.yml sets register-with-eureka/fetch-registry
+# to false, so a defaultZone is never used. config-server never sees it take effect at all
+# (no Eureka client dependency on its classpath).
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_USERNAME:eureka-client}:${EUREKA_PASSWORD:eureka-client-secret}@${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
+    healthcheck:
+      enabled: true
+  instance:
+    prefer-ip-address: true
+
+# Shared HS256 signing secret: every service that validates a JWT (JwtAuthenticationAutoConfiguration
+# in common-library, active only for services that add jjwt + Spring Security themselves)
+# needs the identical key identity-service signs with - there is no per-service copy to keep
+# in sync. Dev-only default, same pattern as every other credential in this repo; see
+# docs/config-server.md's Security section for why this needs real encryption support
+# ({cipher}...) before any real deployment, and docs/identity-service.md for the token model.
+orderflow:
+  jwt:
+    secret: ${JWT_SECRET:igORdx8E7bFWRYVWwqxna9L8ckimw0cVJ0UzgqzBkl8=}
+    access-token-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:900000}
+    refresh-token-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}
+    issuer: orderflow-identity-service

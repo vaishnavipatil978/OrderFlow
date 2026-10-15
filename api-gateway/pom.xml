@@ -40,6 +40,13 @@
             <groupId>io.github.resilience4j</groupId>
             <artifactId>resilience4j-reactor</artifactId>
         </dependency>
+        <!-- Provides the ReactiveCircuitBreakerFactory that Spring Cloud Gateway's
+             CircuitBreaker GatewayFilterFactory needs; resilience4j-spring-boot3 alone
+             (actuator health indicators, property binding) doesn't supply one. -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>

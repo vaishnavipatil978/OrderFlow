@@ -1,0 +1,31 @@
+# Test-only overrides so the suite is hermetic. Postgres and Kafka endpoints are registered
+# dynamically by AbstractIntegrationTest. The Feign clients are mocked in tests, so no discovery
+# is needed. Kafka serializer settings mirror config-repo's order profile.
+spring:
+  cloud:
+    config:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+
+eureka:
+  client:
+    enabled: false
+
+orderflow:
+  jwt:
+    secret: ZwxARLiyNc9Of8a4WsDzxQxaFYNhGHQf9SAsYSlX1Ik=
+    access-token-expiration-ms: 900000
+    refresh-token-expiration-ms: 604800000
+    issuer: orderflow-identity-service-test
+  outbox:
+    poll-interval-ms: 200

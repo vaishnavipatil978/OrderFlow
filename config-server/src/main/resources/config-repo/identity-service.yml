@@ -1,0 +1,32 @@
+server:
+  port: 8081
+
+# Redis (roadmap item 14) isn't running/wired yet, so its actuator health indicator would
+# otherwise report DOWN even though the service itself is healthy. Remove once that phase
+# lands and Redis is actually reachable. (Eureka's equivalent override was removed now that
+# discovery-server, roadmap item 5, is live.)
+management:
+  health:
+    redis:
+      enabled: false
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:orderflow_identity}
+    username: ${DB_USERNAME:orderflow}
+    password: ${DB_PASSWORD:orderflow}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+# orderflow.jwt.* moved to the shared application.yml - product-service (and any future
+# service validating tokens) needs the identical signing secret, not a copy. Only
+# orderflow.admin.* stays here: seeding the platform's one admin account is identity-service's
+# job alone.
+orderflow:
+  admin:
+    email: ${ADMIN_EMAIL:admin@orderflow.dev}
+    password: ${ADMIN_PASSWORD:ChangeMe123!}

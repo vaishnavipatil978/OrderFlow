@@ -1,0 +1,119 @@
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: identity-service
+          uri: lb://IDENTITY-SERVICE
+          predicates:
+            - Path=/api/identity/**
+          filters:
+            - StripPrefix=2
+            - name: CircuitBreaker
+              args:
+                name: identityServiceCB
+                fallbackUri: forward:/fallback/identity-service
+        - id: product-service
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/api/products/**
+          filters:
+            - StripPrefix=2
+            - name: CircuitBreaker
+              args:
+                name: productServiceCB
+                fallbackUri: forward:/fallback/product-service
+        - id: inventory-service
+          uri: lb://INVENTORY-SERVICE
+          predicates:
+            - Path=/api/inventory/**
+          filters:
+            - StripPrefix=2
+            - name: CircuitBreaker
+              args:
+                name: inventoryServiceCB
+                fallbackUri: forward:/fallback/inventory-service
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/api/orders/**
+          filters:
+            - StripPrefix=2
+            - name: CircuitBreaker
+              args:
+                name: orderServiceCB
+                fallbackUri: forward:/fallback/order-service
+        - id: payment-service
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/api/payments/**
+          filters:
+            - StripPrefix=2
+            - name: CircuitBreaker
+              args:
+                name: paymentServiceCB
+                fallbackUri: forward:/fallback/payment-service
+        - id: notification-service
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/api/notifications/**
+          filters:
+            - StripPrefix=2
+            - name: CircuitBreaker
+              args:
+                name: notificationServiceCB
+                fallbackUri: forward:/fallback/notification-service
+
+# One instance per route above, all sharing the same shape today - if a service later needs
+# a different threshold (e.g. payment-service tolerating fewer failures before opening), give
+# it its own config block and point that instance at it instead of "default".
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slowCallDurationThreshold: 3s
+        slowCallRateThreshold: 50
+    instances:
+      identityServiceCB:
+        baseConfig: default
+      productServiceCB:
+        baseConfig: default
+      inventoryServiceCB:
+        baseConfig: default
+      orderServiceCB:
+        baseConfig: default
+      paymentServiceCB:
+        baseConfig: default
+      notificationServiceCB:
+        baseConfig: default
+  timelimiter:
+    configs:
+      default:
+        timeoutDuration: 4s
+    instances:
+      identityServiceCB:
+        baseConfig: default
+      productServiceCB:
+        baseConfig: default
+      inventoryServiceCB:
+        baseConfig: default
+      orderServiceCB:
+        baseConfig: default
+      paymentServiceCB:
+        baseConfig: default
+      notificationServiceCB:
+        baseConfig: default

@@ -16,6 +16,14 @@
     <description>Authentication, authorization (RBAC) and JWT issuance for OrderFlow</description>
 
     <dependencies>
+        <!-- OrderFlow shared conventions: ApiResponse envelope, global exception handling,
+             correlation ID propagation, JPA base entity -->
+        <dependency>
+            <groupId>com.orderflow</groupId>
+            <artifactId>common-library</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Web / API -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

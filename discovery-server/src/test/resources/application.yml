@@ -1,0 +1,16 @@
+# Test-only overrides so the suite is hermetic - it must not depend on config-server actually
+# running. spring.security.user.* mirrors what config-repo/discovery-server.yml provides in
+# real deployments, just with fixed test values instead of env-var-driven ones.
+spring:
+  cloud:
+    config:
+      enabled: false
+  security:
+    user:
+      name: test-eureka-user
+      password: test-eureka-pass
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false

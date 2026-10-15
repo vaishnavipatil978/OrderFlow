@@ -1,0 +1,6 @@
+com.orderflow.common.exception.GlobalExceptionHandler
+com.orderflow.common.exception.SecurityExceptionAutoConfiguration
+com.orderflow.common.correlation.CorrelationIdAutoConfiguration
+com.orderflow.common.correlation.FeignCorrelationIdAutoConfiguration
+com.orderflow.common.entity.JpaAuditingAutoConfiguration
+com.orderflow.common.security.JwtAuthenticationAutoConfiguration

@@ -1,0 +1,17 @@
+server:
+  port: 8761
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+  server:
+    enable-self-preservation: false
+
+# Discovery Server can fetch its own config (unlike Config Server), so its Basic Auth
+# credentials are centralized here rather than duplicated in its local application.yml.
+spring:
+  security:
+    user:
+      name: ${EUREKA_USERNAME:eureka-client}
+      password: ${EUREKA_PASSWORD:eureka-client-secret}

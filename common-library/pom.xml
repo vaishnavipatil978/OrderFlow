@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.orderflow</groupId>
+        <artifactId>orderflow-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>common-library</artifactId>
+    <packaging>jar</packaging>
+    <name>Common Library</name>
+    <description>
+        Shared cross-cutting conventions for OrderFlow business services: generic API response
+        envelope, exception hierarchy + global exception handling, correlation ID propagation,
+        and a JPA base entity (auditing + optimistic locking). Auto-configured via Spring Boot's
+        AutoConfiguration.imports mechanism - consuming services only need the dependency, no
+        component-scan changes. Not consumed by config-server, discovery-server, or api-gateway
+        (the gateway is a reactive/WebFlux stack and needs its own equivalents).
+    </description>
+
+    <dependencies>
+        <!-- Servlet-stack MVC types: ResponseEntity, @RestControllerAdvice, OncePerRequestFilter,
+             HttpMessageNotReadableException, MissingServletRequestParameterException, jakarta.servlet.* -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- ConstraintViolationException for handling method/bean validation failures -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+
+        <!-- Optional: only activates JPA auditing autoconfiguration if the consuming
+             service already has spring-data-jpa on its own classpath -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Optional: only activates the Feign correlation-id interceptor if the consuming
+             service already has spring-cloud-starter-openfeign on its own classpath -->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-core</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Optional: only needed for AccessDeniedException handling and JWT authentication
+             in services that add Spring Security themselves (identity-service, product-service, ...) -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- Optional: AuthenticationEntryPoint, WebAuthenticationDetailsSource - the servlet-
+             filter-chain half of Spring Security, separate from spring-security-core above -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Optional: only activates JwtAuthenticationAutoConfiguration if the consuming
+             service also brings jjwt-impl/jjwt-jackson at runtime itself (this module only
+             ever touches the jjwt-api surface, never a concrete implementation) -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- jjwt-api above is optional (compile) so it isn't forced on every consumer, but this
+             module's own JwtServiceTest needs an actual implementation + JSON codec to run -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

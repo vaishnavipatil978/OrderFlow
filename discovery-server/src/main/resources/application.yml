@@ -1,19 +1,9 @@
 spring:
   application:
     name: discovery-server
-
-server:
-  port: 8761
-
-eureka:
-  client:
-    register-with-eureka: false
-    fetch-registry: false
-  server:
-    enable-self-preservation: false
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info
+  config:
+    import: optional:configserver:http://${CONFIG_SERVER_HOST:localhost}:${CONFIG_SERVER_PORT:8888}
+  cloud:
+    config:
+      username: ${CONFIG_SERVER_USERNAME:config-client}
+      password: ${CONFIG_SERVER_PASSWORD:config-client-secret}

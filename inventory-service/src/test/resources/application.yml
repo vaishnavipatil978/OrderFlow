@@ -1,0 +1,24 @@
+# Test-only overrides so the suite is hermetic. The Postgres JDBC URL is registered dynamically by
+# AbstractIntegrationTest via @DynamicPropertySource. orderflow.jwt.secret matches the shared
+# config-repo value so tokens minted by identity-service verify here too.
+spring:
+  cloud:
+    config:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+eureka:
+  client:
+    enabled: false
+
+orderflow:
+  jwt:
+    secret: ZwxARLiyNc9Of8a4WsDzxQxaFYNhGHQf9SAsYSlX1Ik=
+    access-token-expiration-ms: 900000
+    refresh-token-expiration-ms: 604800000
+    issuer: orderflow-identity-service-test

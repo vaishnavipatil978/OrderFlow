@@ -1,6 +1,9 @@
 spring:
   application:
     name: identity-service
-
-server:
-  port: 8081
+  config:
+    import: optional:configserver:http://${CONFIG_SERVER_HOST:localhost}:${CONFIG_SERVER_PORT:8888}
+  cloud:
+    config:
+      username: ${CONFIG_SERVER_USERNAME:config-client}
+      password: ${CONFIG_SERVER_PASSWORD:config-client-secret}

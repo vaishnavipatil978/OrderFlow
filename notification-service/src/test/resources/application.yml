@@ -1,0 +1,32 @@
+# Test-only overrides so the suite is hermetic. Postgres and Kafka endpoints are registered
+# dynamically by AbstractIntegrationTest. Kafka serializer settings mirror config-repo's notification
+# profile because config-repo is not loaded during tests.
+spring:
+  cloud:
+    config:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+eureka:
+  client:
+    enabled: false
+
+orderflow:
+  jwt:
+    secret: ZwxARLiyNc9Of8a4WsDzxQxaFYNhGHQf9SAsYSlX1Ik=
+    access-token-expiration-ms: 900000
+    refresh-token-expiration-ms: 604800000
+    issuer: orderflow-identity-service-test
